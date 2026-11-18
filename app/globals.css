@@ -49,6 +49,11 @@
     --color-success-foreground: var(--success-foreground);
     --color-warning: var(--warning);
     --color-warning-foreground: var(--warning-foreground);
+    --color-success-soft: var(--success-soft);
+    --color-success-soft-foreground: var(--success-soft-foreground);
+    --color-premium: var(--premium);
+    --color-placeholder: var(--placeholder);
+    --shadow-float: var(--float-shadow);
     --radius-sm: calc(var(--radius) * 0.6);
     --radius-md: calc(var(--radius) * 0.8);
     --radius-lg: var(--radius);
@@ -95,6 +100,11 @@
     --success-foreground: #ffffff;
     --warning: #f6e2b3;
     --warning-foreground: #6b4a10;
+    --success-soft: #dfe5d3;
+    --success-soft-foreground: #3f4a2e;
+    --premium: #201e1d;
+    --placeholder: #f3d9b8;
+    --float-shadow: 0 2px 6px rgba(80, 50, 20, 0.06), 0 14px 32px rgba(80, 50, 20, 0.1);
     --chart-1: #b8321f;
     --chart-2: #f0c48e;
     --chart-3: #7a8a5e;
@@ -139,6 +149,11 @@
     --success-foreground: #ffffff;
     --warning: #4a3a1c;
     --warning-foreground: #f0d08a;
+    --success-soft: #363f2b;
+    --success-soft-foreground: #cfdcb6;
+    --premium: #201e1d;
+    --placeholder: #3a2a24;
+    --float-shadow: 0 2px 6px rgba(0, 0, 0, 0.25), 0 14px 32px rgba(0, 0, 0, 0.35);
     --chart-1: #b8321f;
     --chart-2: #f0c48e;
     --chart-3: #7a8a5e;
@@ -167,10 +182,17 @@
         @apply font-sans;
     }
 
-    /* his additions */
     h1 {
-        @apply font-heading text-4xl leading-none
-            md:text-6xl lg:text-7xl;
+        @apply font-heading leading-none tracking-tight text-balance;
+        font-size: 2.625rem;
+
+        @variant md {
+            font-size: 3.625rem;
+        }
+
+        @variant lg {
+            font-size: 4.75rem;
+        }
     }
 
     h2 {
