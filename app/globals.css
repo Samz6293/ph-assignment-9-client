@@ -58,11 +58,13 @@
     --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-/* one-off sizes from the design file: text-overline (caps labels), text-md (nav links, buttons), text-logo (wordmark) */
+/* one-off sizes from the design file: text-overline (caps labels), text-md (nav links, buttons), text-logo (wordmark), text-10xl (404 number) */
 @theme {
     --text-overline: 0.8125rem;
     --text-md: 0.9375rem;
     --text-logo: 1.625rem;
+    --text-10xl: 10rem;
+    --text-10xl--line-height: 1;
 }
 
 /* the values: light theme (Flour) */
