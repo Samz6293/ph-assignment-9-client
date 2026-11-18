@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Archivo, Caprasimo } from "next/font/google";
+import Navbar from "@/components/navbar/Navbar";
+import ThemeProvider from "@/components/shared/ThemeProvider";
 import "./globals.css";
 
 // headings, prices and big numbers
@@ -22,8 +24,14 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
     return (
-        <html lang="en" className={`${caprasimo.variable} ${archivo.variable} h-full antialiased`}>
-            <body className="flex flex-col min-h-full">{children}</body>
+        // suppressHydrationWarning: next-themes adds the "dark" class before React loads, so the server HTML differs on purpose
+        <html lang="en" className={`${caprasimo.variable} ${archivo.variable} h-full antialiased`} suppressHydrationWarning>
+            <body className="flex flex-col min-h-full">
+                <ThemeProvider attribute="class" defaultTheme="light">
+                    <Navbar />
+                    {children}
+                </ThemeProvider>
+            </body>
         </html>
     );
 }

@@ -41,6 +41,8 @@
     --color-popover: var(--popover);
     --color-card-foreground: var(--card-foreground);
     --color-card: var(--card);
+    --color-primary-soft: var(--primary-soft);
+    --color-primary-soft-foreground: var(--primary-soft-foreground);
     --color-success: var(--success);
     --color-success-foreground: var(--success-foreground);
     --color-warning: var(--warning);
@@ -54,6 +56,12 @@
     --radius-4xl: calc(var(--radius) * 2.6);
 }
 
+/* one-off sizes from the design file: text-md (nav links, buttons), text-logo (wordmark) */
+@theme {
+    --text-md: 0.9375rem;
+    --text-logo: 1.625rem;
+}
+
 /* the values: light theme (Flour) */
 :root {
     --background: #f5ead8;
@@ -64,6 +72,8 @@
     --popover-foreground: #201e1d;
     --primary: #b8321f;
     --primary-foreground: #ffffff;
+    --primary-soft: #f7d6cf;
+    --primary-soft-foreground: #7e1f12;
     --secondary: #efe1c9;
     --secondary-foreground: #201e1d;
     --muted: #efe1c9;
@@ -104,6 +114,8 @@
     --popover-foreground: #f5ead8;
     --primary: #b8321f;
     --primary-foreground: #ffffff;
+    --primary-soft: #4a2420;
+    --primary-soft-foreground: #f7b4a8;
     --secondary: #352d27;
     --secondary-foreground: #f5ead8;
     --muted: #352d27;
@@ -168,6 +180,13 @@
 }
 
 @utility content-box {
-    @apply mx-auto w-full max-w-330 px-5
-        lg:px-12;
+    @apply mx-auto w-full max-w-360 px-5
+        md:px-10 lg:px-18;
+}
+
+/* theme toggle: turns off the browser's default fade so Magic UI's circle reveal shows */
+::view-transition-old(root),
+::view-transition-new(root) {
+    animation: none;
+    mix-blend-mode: normal;
 }
