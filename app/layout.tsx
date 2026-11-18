@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Archivo, Caprasimo } from "next/font/google";
 import Navbar from "@/components/navbar/Navbar";
+import Footer from "@/components/footer/Footer";
 import ThemeProvider from "@/components/shared/ThemeProvider";
 import "./globals.css";
 
@@ -29,7 +30,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             <body className="flex flex-col min-h-full">
                 <ThemeProvider attribute="class" defaultTheme="light">
                     <Navbar />
-                    {children}
+                    <main className="flex-1">{children}</main>
+                    <Footer />
                 </ThemeProvider>
             </body>
         </html>
