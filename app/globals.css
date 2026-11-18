@@ -104,6 +104,7 @@
     --success-soft-foreground: #3f4a2e;
     --premium: #201e1d;
     --placeholder: #f3d9b8;
+    --autofill: #e8f0fe;
     --float-shadow: 0 2px 6px rgba(80, 50, 20, 0.06), 0 14px 32px rgba(80, 50, 20, 0.1);
     --chart-1: #b8321f;
     --chart-2: #f0c48e;
@@ -153,6 +154,7 @@
     --success-soft-foreground: #cfdcb6;
     --premium: #201e1d;
     --placeholder: #3a2a24;
+    --autofill: #2d3444;
     --float-shadow: 0 2px 6px rgba(0, 0, 0, 0.25), 0 14px 32px rgba(0, 0, 0, 0.35);
     --chart-1: #b8321f;
     --chart-2: #f0c48e;
@@ -220,4 +222,20 @@
 ::view-transition-new(root) {
     animation: none;
     mix-blend-mode: normal;
+}
+
+/* autofill: autofilled fields get a soft tint (--autofill) that fills the whole rounded field.
+   Kept outside @layer on purpose so it beats Tailwind classes like bg-background.
+   An inset shadow is the only way to cover the browser's own autofill background. */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0 1000px var(--autofill) inset;
+    -webkit-text-fill-color: var(--foreground);
+    caret-color: var(--foreground);
+}
+
+/* inputs with icons: tint the whole group, not just the inner input */
+[data-slot="input-group"]:has(input:-webkit-autofill) {
+    background-color: var(--autofill);
 }
