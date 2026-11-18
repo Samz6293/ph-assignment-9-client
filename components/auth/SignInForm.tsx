@@ -2,17 +2,23 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { EyeIcon, EyeOffIcon, LockIcon, MailIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 import { Field, FieldGroup, FieldLabel, FieldSeparator } from "@/components/ui/field";
 import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "@/components/ui/input-group";
 import FieldMessage from "@/components/shared/FieldMessage";
+import { googleSignIn, signInUser } from "@/lib/user";
 
 export default function SignInForm() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const [submitted, setSubmitted] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [googleLoading, setGoogleLoading] = useState(false);
+    const router = useRouter();
 
     // error messages, worked out on every render
     // sign in only checks that the password is there; the rules were checked at sign up
@@ -23,16 +29,32 @@ export default function SignInForm() {
     const showEmailError = (email !== "" || submitted) && emailError;
     const showPasswordError = submitted && passwordError;
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setSubmitted(true);
 
         // stop here if anything is invalid, the errors show under the inputs
         if (emailError || passwordError) return;
 
-        // TODO: sign in with Better Auth and redirect by role
-        const formData = { email, password };
-        console.log(formData);
+        setLoading(true);
+        const success = await signInUser(email, password);
+
+        // TODO: redirect to the user's dashboard once the dashboards exist
+        if (success) {
+            // the page stays mounted (hidden) after we leave, so clear it for next time; the email stays for convenience
+            setLoading(false);
+            setSubmitted(false);
+            setPassword("");
+            router.push("/");
+        }
+        else setLoading(false);
+    };
+
+    // Google sends the browser to its own page, the spinner stays until it leaves
+    const handleGoogle = async () => {
+        setGoogleLoading(true);
+        await googleSignIn();
+        setGoogleLoading(false);
     };
 
     return (
@@ -47,10 +69,12 @@ export default function SignInForm() {
             </div>
 
             {/* google */}
-            {/* TODO: sign in with Google through Better Auth */}
-            <Button size="lg" variant="outline" type="button" className="w-full">
-                <Image src="/google.svg" alt="" width={18} height={18} />
-                Continue with Google
+            <Button size="lg" variant="outline" type="button" onClick={handleGoogle} disabled={googleLoading} className="w-full">
+                {googleLoading ?
+                    <><Spinner /> Opening Google…</>
+                    :
+                    <><Image src="/google.svg" alt="" width={18} height={18} /> Continue with Google</>
+                }
             </Button>
 
             <FieldSeparator>or with email</FieldSeparator>
@@ -92,7 +116,9 @@ export default function SignInForm() {
                         <FieldMessage message={showPasswordError} />
                     </Field>
 
-                    <Button size="lg" type="submit" className="w-full">Sign In</Button>
+                    <Button size="lg" type="submit" disabled={loading} className="w-full">
+                        {loading ? <><Spinner /> Signing in…</> : "Sign In"}
+                    </Button>
                 </FieldGroup>
             </form>
 

@@ -9,12 +9,17 @@ export default function UserArea() {
     const { data: session, isPending } = authClient.useSession();
 
     // while the session loads, hold the avatar's place so nothing jumps
-    if (isPending) return <div className="size-10 bg-secondary rounded-full" />;
+    if (isPending) return <div className="hidden size-10 bg-secondary rounded-full
+        sm:block" />;
 
     return (
         <>
+            {/* the avatar menu lives in the bar on desktop; below that the user sits in the hamburger sheet */}
             {session ?
-                <ProfileMenu user={session.user} />
+                <div className="hidden
+                    lg:block">
+                    <ProfileMenu user={session.user} />
+                </div>
                 :
                 <AuthButtons className="hidden items-center gap-2
                     sm:flex" />

@@ -41,6 +41,26 @@ export async function signUpUser(data: SignUpData) {
     }
 }
 
+// signs in with email and password
+export async function signInUser(email: string, password: string) {
+    try {
+        const { data, error } = await authClient.signIn.email({ email, password });
+
+        // Better Auth's own message, e.g. "Invalid email or password"
+        if (error) {
+            toast.error("Couldn't sign you in", { description: error.message || "Please try again." });
+            return false;
+        }
+
+        toast.success("Signed in", { description: `Welcome back, ${data.user.name.split(" ")[0]}.` });
+        return true;
+    }
+    catch {
+        toast.error("Couldn't sign you in", { description: "Check your connection and try again." });
+        return false;
+    }
+}
+
 // ends the session; useSession updates the navbar straight away
 export async function signOutUser() {
     try {

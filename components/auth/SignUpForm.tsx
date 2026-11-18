@@ -51,7 +51,18 @@ export default function SignUpForm() {
         const success = await signUpUser(formData);
 
         // TODO: redirect to the user's dashboard once the dashboards exist
-        if (success) router.push("/");
+        if (success) {
+            // the page stays mounted (hidden) after we leave, so start it fresh for next time
+            setLoading(false);
+            setSubmitted(false);
+            setName("");
+            setEmail("");
+            setPassword("");
+            setImage(null);
+            setRole("customer");
+            setBusinessName("");
+            router.push("/");
+        }
         else setLoading(false);
     };
 
