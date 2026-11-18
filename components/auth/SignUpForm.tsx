@@ -2,13 +2,16 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { CameraIcon, MailIcon, StoreIcon, UserRoundIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 import { Field, FieldGroup, FieldLabel, FieldSeparator } from "@/components/ui/field";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
 import PasswordField, { getPasswordRules } from "@/components/auth/PasswordField";
 import RolePicker from "@/components/auth/RolePicker";
 import FieldMessage from "@/components/shared/FieldMessage";
+import { googleSignIn, signUpUser } from "@/lib/user";
 
 export default function SignUpForm() {
     const [name, setName] = useState("");
@@ -18,6 +21,9 @@ export default function SignUpForm() {
     const [role, setRole] = useState<"customer" | "vendor">("customer");
     const [businessName, setBusinessName] = useState("");
     const [submitted, setSubmitted] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [googleLoading, setGoogleLoading] = useState(false);
+    const router = useRouter();
 
     // error messages, worked out on every render
     const failedRule = getPasswordRules(password).find((rule) => !rule.passed);
@@ -33,16 +39,27 @@ export default function SignUpForm() {
     const showPasswordError = (password !== "" || submitted) && passwordError;
     const showBusinessNameError = (businessName !== "" || submitted) && businessNameError;
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setSubmitted(true);
 
         // stop here if anything is invalid, the errors show under the inputs
         if (nameError || emailError || passwordError || imageError || businessNameError) return;
 
-        // TODO: upload the image and sign up with Better Auth
-        const formData = { name, email, password, image, role, businessName: role === "vendor" ? businessName : undefined };
-        console.log(formData);
+        setLoading(true);
+        const formData = { name, email, password, image, role, businessName: role === "vendor" ? businessName.trim() : undefined };
+        const success = await signUpUser(formData);
+
+        // TODO: redirect to the user's dashboard once the dashboards exist
+        if (success) router.push("/");
+        else setLoading(false);
+    };
+
+    // Google sends the browser to its own page, the spinner stays until it leaves
+    const handleGoogle = async () => {
+        setGoogleLoading(true);
+        await googleSignIn();
+        setGoogleLoading(false);
     };
 
     return (
@@ -56,11 +73,13 @@ export default function SignUpForm() {
                 <p className="text-md text-muted-foreground">Order from local pizzerias, or list your own.</p>
             </div>
 
-            {/* google */}
-            {/* TODO: sign up with Google through Better Auth */}
-            <Button size="lg" variant="outline" type="button" className="w-full">
-                <Image src="/google.svg" alt="" width={18} height={18} />
-                Continue with Google
+            {/* google: new Google accounts start as customers, since Google can't send a role */}
+            <Button size="lg" variant="outline" type="button" onClick={handleGoogle} disabled={googleLoading} className="w-full">
+                {googleLoading ?
+                    <><Spinner /> Opening Google…</>
+                    :
+                    <><Image src="/google.svg" alt="" width={18} height={18} /> Continue with Google</>
+                }
             </Button>
 
             <FieldSeparator>or with email</FieldSeparator>
@@ -133,7 +152,9 @@ export default function SignUpForm() {
                         </Field>
                     }
 
-                    <Button size="lg" type="submit" className="w-full">Create account</Button>
+                    <Button size="lg" type="submit" disabled={loading} className="w-full">
+                        {loading ? <><Spinner /> Creating account…</> : "Create account"}
+                    </Button>
                 </FieldGroup>
             </form>
 

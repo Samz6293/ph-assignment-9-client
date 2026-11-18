@@ -6,9 +6,11 @@ import Logo from "@/components/shared/Logo";
 import NavLinks from "@/components/navbar/NavLinks";
 import AuthButtons from "@/components/navbar/AuthButtons";
 import { navLinks } from "@/lib/navlinks";
+import { authClient } from "@/lib/auth-client";
 
 export default function MobileMenu({ className }: { className?: string }) {
     const [open, setOpen] = useState(false);
+    const { data: session } = authClient.useSession();
 
     // a link click doesn't close the sheet by itself, so each link calls this
     const handleClose = () => setOpen(false);
@@ -33,10 +35,12 @@ export default function MobileMenu({ className }: { className?: string }) {
                     {/* links */}
                     <NavLinks className="flex flex-col gap-1" links={navLinks} isSheet onLinkClick={handleClose} />
 
-                    {/* auth */}
-                    <SheetFooter className="p-0">
-                        <AuthButtons className="flex flex-col gap-2" onLinkClick={handleClose} />
-                    </SheetFooter>
+                    {/* auth: only when signed out; signed-in users have the avatar menu in the bar */}
+                    {!session &&
+                        <SheetFooter className="p-0">
+                            <AuthButtons className="flex flex-col gap-2" onLinkClick={handleClose} />
+                        </SheetFooter>
+                    }
                 </SheetContent>
             </Sheet>
         </div>

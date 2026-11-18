@@ -25,6 +25,12 @@ export const auth = betterAuth({
                 defaultValue: "customer",
                 input: true,
             },
+            // vendors only: no default, so customers never get this field
+            businessName: {
+                type: "string",
+                required: false,
+                input: true,
+            },
         },
     },
     databaseHooks: {

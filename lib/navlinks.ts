@@ -5,6 +5,9 @@ export const navLinks: NavLink[] = [
     { label: "Browse Menu", href: "/menu" },
 ];
 
+// each role has its own dashboard
+export const getDashboardLink = (role: string) => `/dashboard/${role}`;
+
 export const footerLinks: NavLink[] = [
     ...navLinks,
     { label: "Categories", href: "/#categories" },

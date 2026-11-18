@@ -6,7 +6,7 @@ import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "
 
 // password rules: the form uses these to decide if the password is valid
 export const getPasswordRules = (password: string) => [
-    { label: "6+ characters", passed: password.length >= 6, error: "Password needs at least 6 characters." },
+    { label: "8+ characters", passed: password.length >= 8, error: "Password needs at least 8 characters." },
     { label: "One uppercase", passed: /[A-Z]/.test(password), error: "Password needs at least one uppercase letter." },
     { label: "One lowercase", passed: /[a-z]/.test(password), error: "Password needs at least one lowercase letter." },
 ];

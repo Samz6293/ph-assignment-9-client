@@ -3,6 +3,7 @@ import { Archivo, Caprasimo } from "next/font/google";
 import Navbar from "@/components/navbar/Navbar";
 import Footer from "@/components/footer/Footer";
 import ThemeProvider from "@/components/shared/ThemeProvider";
+import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 
 // headings, prices and big numbers
@@ -32,6 +33,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
                     <Navbar />
                     <main className="flex-1">{children}</main>
                     <Footer />
+                    <Toaster position="bottom-right" />
                 </ThemeProvider>
             </body>
         </html>
