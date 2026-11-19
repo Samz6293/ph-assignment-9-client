@@ -24,3 +24,15 @@ export interface VendorPreview {
     businessName: string
     location: string
 }
+
+// a user as the Express server sends it (straight from MongoDB)
+export interface UserData {
+    _id: string
+    name: string
+    email: string
+    image?: string
+    role: "customer" | "vendor" | "admin"
+    businessName?: string
+    isBlocked?: boolean
+    createdAt: string
+}
