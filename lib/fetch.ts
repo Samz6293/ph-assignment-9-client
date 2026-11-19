@@ -1,4 +1,5 @@
 import { headers } from "next/headers";
+import { connection } from "next/server";
 import { auth } from "@/lib/auth";
 import { UserData, VendorPreview } from "@/lib/types";
 
@@ -8,6 +9,8 @@ const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
 // the signed-in user's token (15 min), made from the session cookie of this request
 async function getToken() {
+    // Better Auth reads the clock (new Date()) to sign the token; connection() makes Next wait for a real request first
+    await connection();
     const { token } = await auth.api.getToken({ headers: await headers() });
     return token;
 }
