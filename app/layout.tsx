@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import { Archivo, Caprasimo } from "next/font/google";
-import Navbar from "@/components/navbar/Navbar";
-import Footer from "@/components/footer/Footer";
 import ThemeProvider from "@/components/shared/ThemeProvider";
 import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
@@ -30,9 +28,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <html lang="en" className={`${caprasimo.variable} ${archivo.variable} h-full antialiased`} suppressHydrationWarning>
             <body className="flex flex-col min-h-full">
                 <ThemeProvider attribute="class" defaultTheme="light">
-                    <Navbar />
-                    <main className="flex-1">{children}</main>
-                    <Footer />
+                    {children}
                     <Toaster position="bottom-right" />
                 </ThemeProvider>
             </body>
