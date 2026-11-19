@@ -2,15 +2,9 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { NavLink } from "@/lib/types";
-import { authClient } from "@/lib/auth-client";
-import { getDashboardLink } from "@/lib/navlinks";
 
 export default function NavLinks({ className, links, isSheet, onLinkClick }: { className?: string, links: NavLink[], isSheet?: boolean, onLinkClick?: () => void }) {
     const pathname = usePathname();
-    const { data: session } = authClient.useSession();
-
-    // signed-in users also get their dashboard
-    const allLinks = session ? [...links, { label: "Dashboard", href: getDashboardLink(session.user.role) }] : links;
 
     // active pill: soft red in the navbar, solid red in the mobile sheet
     const activeStyle = isSheet ? "bg-primary text-primary-foreground font-semibold" : "bg-primary-soft text-primary-soft-foreground font-semibold";
@@ -18,7 +12,7 @@ export default function NavLinks({ className, links, isSheet, onLinkClick }: { c
 
     return (
         <div className={className}>
-            {allLinks.map((link) =>
+            {links.map((link) =>
                 <Link key={link.href} href={link.href} onClick={onLinkClick} className={`px-3.5 rounded-full text-md
                     ${isSheet ? "py-2.75" : "py-2"}
                     ${pathname === link.href ? activeStyle : idleStyle}

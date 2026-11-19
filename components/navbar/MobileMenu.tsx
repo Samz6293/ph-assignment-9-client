@@ -1,13 +1,14 @@
 "use client";
 import { useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { LogOutIcon, MenuIcon } from "lucide-react";
+import { LayoutDashboardIcon, LogOutIcon, MenuIcon, SettingsIcon } from "lucide-react";
 import { Sheet, SheetContent, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import Logo from "@/components/shared/Logo";
 import NavLinks from "@/components/navbar/NavLinks";
 import AuthButtons from "@/components/navbar/AuthButtons";
 import UserAvatar from "@/components/shared/UserAvatar";
-import { navLinks } from "@/lib/navlinks";
+import { getDashboardLink, navLinks } from "@/lib/navlinks";
 import { authClient } from "@/lib/auth-client";
 import { signOutUser } from "@/lib/user";
 
@@ -50,15 +51,30 @@ export default function MobileMenu({ className }: { className?: string }) {
                     {/* bottom: the signed-in user with logout (like the dashboard drawer), or the auth buttons */}
                     <SheetFooter className="p-0">
                         {session ?
-                            <div className="flex items-center gap-3 border-t px-2.5 pt-3.5">
-                                <UserAvatar name={session.user.name} image={session.user.image} className="size-10" textClassName="text-md" />
-                                <div className="flex flex-col flex-1 gap-0.5 min-w-0">
-                                    <b className="text-sm truncate">{session.user.name}</b>
-                                    <span className="text-xs text-muted-foreground truncate">{session.user.email}</span>
+                            // same as the desktop avatar menu: who you are, then Dashboard, Profile Settings and Logout
+                            <div className="flex flex-col gap-0.5 w-full border-t pt-3.5">
+                                <div className="flex items-center gap-3 border-b mb-1.5 px-3 pb-3.5">
+                                    <UserAvatar name={session.user.name} image={session.user.image} className="size-11" textClassName="text-lg" />
+                                    <div className="flex flex-col gap-0.5 min-w-0">
+                                        <b className="text-md truncate">{session.user.name}</b>
+                                        <span className="text-sm text-muted-foreground truncate">{session.user.email}</span>
+                                    </div>
                                 </div>
-                                <button type="button" onClick={handleLogout} aria-label="Logout" className="flex items-center justify-center size-10 text-muted-foreground rounded-full
-                                    hover:bg-secondary hover:text-destructive">
+
+                                <Link href={getDashboardLink(session.user.role)} onClick={handleClose} className="flex items-center gap-3 px-3 py-2.75 rounded-lg text-md font-medium
+                                    hover:bg-secondary">
+                                    <LayoutDashboardIcon className="size-4.5" strokeWidth={2.5} />
+                                    Dashboard
+                                </Link>
+                                <Link href={`${getDashboardLink(session.user.role)}/profile`} onClick={handleClose} className="flex items-center gap-3 px-3 py-2.75 rounded-lg text-md font-medium
+                                    hover:bg-secondary">
+                                    <SettingsIcon className="size-4.5" strokeWidth={2.5} />
+                                    Profile Settings
+                                </Link>
+                                <button type="button" onClick={handleLogout} className="flex items-center gap-3 text-destructive px-3 py-2.75 rounded-lg text-md font-semibold
+                                    hover:bg-destructive/10">
                                     <LogOutIcon className="size-4.5" strokeWidth={2.5} />
+                                    Logout
                                 </button>
                             </div>
                             :
