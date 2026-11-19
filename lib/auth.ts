@@ -25,6 +25,12 @@ export const auth = betterAuth({
                 defaultValue: "customer",
                 input: true,
             },
+            // set by an admin through the server; input: false so nobody can sign up already "unblocked" or blocked
+            isBlocked: {
+                type: "boolean",
+                defaultValue: false,
+                input: false,
+            },
             // vendors only: no default, so customers never get this field
             businessName: {
                 type: "string",
