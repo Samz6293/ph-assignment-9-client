@@ -2,6 +2,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import UserAvatar from "@/components/shared/UserAvatar";
 import NoUsers from "@/components/admin/NoUsers";
 import UserStatusTag from "@/components/admin/UserStatusTag";
+import UserDetailsDialog from "@/components/admin/UserDetailsDialog";
 import { getUsers } from "@/lib/fetch";
 import { formatDate } from "@/lib/date";
 import { UserData } from "@/lib/types";
@@ -31,7 +32,10 @@ export default async function UsersList({ searchParams }: { searchParams: Promis
                             <span className="text-sm text-muted-foreground truncate">{user.email}</span>
                             <span className="text-xs text-muted-foreground capitalize mt-1">{roleLabel(user)} · Joined {formatDate(user.createdAt)}</span>
                         </div>
-                        <UserStatusTag isBlocked={user.isBlocked} />
+                        <div className="flex flex-col items-end gap-2">
+                            <UserStatusTag isBlocked={user.isBlocked} />
+                            <UserDetailsDialog user={user} joined={formatDate(user.createdAt)} />
+                        </div>
                     </div>
                 )}
             </div>
@@ -45,7 +49,8 @@ export default async function UsersList({ searchParams }: { searchParams: Promis
                             <TableHead className="pl-5">User</TableHead>
                             <TableHead>Role</TableHead>
                             <TableHead>Joined</TableHead>
-                            <TableHead className="pr-5">Status</TableHead>
+                            <TableHead>Status</TableHead>
+                            <TableHead className="pr-5 text-right">Actions</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -62,8 +67,11 @@ export default async function UsersList({ searchParams }: { searchParams: Promis
                                 </TableCell>
                                 <TableCell className="capitalize">{roleLabel(user)}</TableCell>
                                 <TableCell className="text-muted-foreground">{formatDate(user.createdAt)}</TableCell>
-                                <TableCell className="pr-5">
+                                <TableCell>
                                     <UserStatusTag isBlocked={user.isBlocked} />
+                                </TableCell>
+                                <TableCell className="pr-5 text-right">
+                                    <UserDetailsDialog user={user} joined={formatDate(user.createdAt)} />
                                 </TableCell>
                             </TableRow>
                         )}
