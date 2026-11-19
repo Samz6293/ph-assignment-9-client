@@ -35,5 +35,6 @@ export const dashboardLinks: Record<string, DashboardLink[]> = {
         { label: "Manage Users", href: "/dashboard/admin/users", icon: UsersIcon },
         { label: "Manage Menu Items", href: "/dashboard/admin/menu-items", icon: ClipboardListIcon },
         { label: "Transactions", href: "/dashboard/admin/transactions", icon: ReceiptIcon },
+        { label: "Profile Settings", href: "/dashboard/admin/profile", icon: SettingsIcon },
     ],
 };

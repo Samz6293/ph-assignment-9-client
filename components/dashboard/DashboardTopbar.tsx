@@ -6,14 +6,11 @@ import { ChevronRightIcon, ExternalLinkIcon, MenuIcon } from "lucide-react";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import SidebarContent from "@/components/dashboard/SidebarContent";
 import ThemeToggle from "@/components/shared/ThemeToggle";
-import UserAvatar from "@/components/shared/UserAvatar";
-import { authClient } from "@/lib/auth-client";
 import { dashboardLinks } from "@/lib/navlinks";
 
 export default function DashboardTopbar() {
     const [open, setOpen] = useState(false);
     const pathname = usePathname();
-    const { data: session } = authClient.useSession();
 
     // breadcrumb: "{role} dashboard › {current page}"
     const role = pathname.split("/")[2];
@@ -57,7 +54,6 @@ export default function DashboardTopbar() {
                     View site
                 </Link>
                 <ThemeToggle />
-                {session && <UserAvatar name={session.user.name} image={session.user.image} className="size-10" textClassName="text-md" />}
             </div>
         </header>
     )

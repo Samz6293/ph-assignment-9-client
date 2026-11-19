@@ -94,3 +94,23 @@ export async function googleSignIn(callbackURL = "/") {
         toast.error("Couldn't open Google", { description: "Check your connection and try again." });
     }
 }
+
+// saves name, photo and (vendors) business name; Better Auth refuses role and plan changes
+// useSession updates straight after, so the sidebar shows the new name and photo
+export async function updateProfile(data: { name: string, image?: string | null, businessName?: string }) {
+    try {
+        const { error } = await authClient.updateUser(data);
+
+        if (error) {
+            toast.error("Couldn't save your profile", { description: error.message || "Please try again." });
+            return false;
+        }
+
+        toast.success("Profile saved", { description: "Your changes show across PizzaHub now." });
+        return true;
+    }
+    catch {
+        toast.error("Couldn't save your profile", { description: "Check your connection and try again." });
+        return false;
+    }
+}
