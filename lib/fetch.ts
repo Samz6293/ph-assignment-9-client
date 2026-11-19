@@ -1,7 +1,7 @@
 import { headers } from "next/headers";
 import { connection } from "next/server";
 import { auth } from "@/lib/auth";
-import { AdminStats, MenuItemData, UserData, VendorPreview } from "@/lib/types";
+import { AdminStats, MenuItemData, MyMenuItem, UserData, VendorPreview } from "@/lib/types";
 
 // server-only helpers: they read the request's cookies, so only server components can call them
 
@@ -54,5 +54,14 @@ export async function getAdminMenuItems(search?: string, status?: string): Promi
         headers: { Authorization: `Bearer ${await getToken()}` },
     });
     if (!res.ok) throw new Error("Couldn't load menu items");
+    return await res.json();
+}
+
+// vendor: their own items in every status, newest first
+export async function getMyMenuItems(): Promise<MyMenuItem[]> {
+    const res = await fetch(`${apiUrl}/menu-items/mine`, {
+        headers: { Authorization: `Bearer ${await getToken()}` },
+    });
+    if (!res.ok) throw new Error("Couldn't load your menu items");
     return await res.json();
 }

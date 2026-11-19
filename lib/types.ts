@@ -69,3 +69,17 @@ export interface MenuItemData {
         businessName?: string
     }
 }
+
+// a vendor's own item (GET /menu-items/mine): same fields, no vendor attached
+// Omit<Type, "key">: copies a type without that key
+export type MyMenuItem = Omit<MenuItemData, "vendor">
+
+// what the Add / Edit form sends
+export interface MenuItemInput {
+    itemName: string
+    category: string
+    description: string
+    price: number
+    location: string
+    images: string[]
+}

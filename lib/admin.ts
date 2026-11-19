@@ -1,16 +1,10 @@
 import { toast } from "sonner";
-import { authClient } from "@/lib/auth-client";
+import { getClientToken } from "@/lib/auth-client";
 import { MenuItemData, UserData } from "@/lib/types";
 
 // admin actions, called from client components after a button click
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-
-// the signed-in user's token, fetched in the browser from Better Auth's /token route (uses the session cookie)
-async function getToken() {
-    const { data } = await authClient.token();
-    return data?.token;
-}
 
 // blocks or unblocks a customer or vendor
 export async function setUserBlocked(user: UserData, isBlocked: boolean) {
@@ -19,7 +13,7 @@ export async function setUserBlocked(user: UserData, isBlocked: boolean) {
     try {
         const res = await fetch(`${apiUrl}/admin/users/${user._id}/block`, {
             method: "PATCH",
-            headers: { "Content-Type": "application/json", Authorization: `Bearer ${await getToken()}` },
+            headers: { "Content-Type": "application/json", Authorization: `Bearer ${await getClientToken()}` },
             body: JSON.stringify({ isBlocked }),
         });
         const data = await res.json();
@@ -47,7 +41,7 @@ export async function setMenuItemStatus(item: MenuItemData, status: "approved" |
     try {
         const res = await fetch(`${apiUrl}/admin/menu-items/${item._id}/status`, {
             method: "PATCH",
-            headers: { "Content-Type": "application/json", Authorization: `Bearer ${await getToken()}` },
+            headers: { "Content-Type": "application/json", Authorization: `Bearer ${await getClientToken()}` },
             body: JSON.stringify({ status }),
         });
         const data = await res.json();
@@ -73,7 +67,7 @@ export async function deleteMenuItem(item: MenuItemData) {
     try {
         const res = await fetch(`${apiUrl}/admin/menu-items/${item._id}`, {
             method: "DELETE",
-            headers: { Authorization: `Bearer ${await getToken()}` },
+            headers: { Authorization: `Bearer ${await getClientToken()}` },
         });
         const data = await res.json();
 
