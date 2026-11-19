@@ -1,7 +1,7 @@
 import { headers } from "next/headers";
 import { connection } from "next/server";
 import { auth } from "@/lib/auth";
-import { AdminStats, MenuItemData, MyMenuItem, UserData, VendorPreview } from "@/lib/types";
+import { AdminStats, MenuFilters, MenuItemData, MyMenuItem, PublicMenuItem, UserData, VendorPreview } from "@/lib/types";
 
 // server-only helpers: they read the request's cookies, so only server components can call them
 
@@ -63,5 +63,26 @@ export async function getMyMenuItems(): Promise<MyMenuItem[]> {
         headers: { Authorization: `Bearer ${await getToken()}` },
     });
     if (!res.ok) throw new Error("Couldn't load your menu items");
+    return await res.json();
+}
+
+// public: approved items, filtered and sorted on the server (no sign-in needed)
+export async function getMenuItems(filters: MenuFilters = {}): Promise<PublicMenuItem[]> {
+    const params = new URLSearchParams();
+    if (filters.search) params.set("search", filters.search);
+    if (filters.category) params.set("category", filters.category);
+    if (filters.location) params.set("location", filters.location);
+    if (filters.sort) params.set("sort", filters.sort);
+    if (filters.limit) params.set("limit", String(filters.limit));
+
+    const res = await fetch(`${apiUrl}/menu-items?${params}`);
+    if (!res.ok) throw new Error("Couldn't load the menu");
+    return await res.json();
+}
+
+// public: every area that has a live item, for the location filter
+export async function getMenuLocations(): Promise<string[]> {
+    const res = await fetch(`${apiUrl}/menu-items/locations`);
+    if (!res.ok) throw new Error("Couldn't load the areas");
     return await res.json();
 }

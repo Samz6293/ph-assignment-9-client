@@ -83,3 +83,21 @@ export interface MenuItemInput {
     location: string
     images: string[]
 }
+
+// a live item on the public menu, with the vendor's public details
+export type PublicMenuItem = MyMenuItem & {
+    vendor: {
+        name: string
+        businessName?: string
+        subscriptionPlan?: "free" | "premium"
+    }
+}
+
+// Browse Menu filters, straight from the URL
+export interface MenuFilters {
+    search?: string
+    category?: string
+    location?: string
+    sort?: string
+    limit?: number
+}
