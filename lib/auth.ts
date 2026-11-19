@@ -3,8 +3,14 @@ import { APIError } from "better-auth/api";
 import { jwt } from "better-auth/plugins";
 import { mongodbAdapter } from "@better-auth/mongo-adapter";
 import { MongoClient } from "mongodb";
+import { attachDatabasePool } from "@vercel/functions";
 
 const client = new MongoClient(process.env.DATABASE_URI!);
+// on Vercel: closes idle connections cleanly before the function pauses (Vercel's documented fix for database pools)
+attachDatabasePool(client);
+// connect before Better Auth's first query: if the first connection is only half open when Vercel pauses the
+// function, the driver closes it for good and every later request fails with "Topology is closed"
+await client.connect();
 const db = client.db("pizza-hub");
 
 export const auth = betterAuth({
