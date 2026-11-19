@@ -81,9 +81,10 @@ export async function signOutUser() {
 }
 
 // sends the browser to Google; it only comes back here if starting that failed
-export async function googleSignIn() {
+// callbackURL: where Google sends the user once they're signed in
+export async function googleSignIn(callbackURL = "/") {
     try {
-        const { error } = await authClient.signIn.social({ provider: "google", callbackURL: "/" });
+        const { error } = await authClient.signIn.social({ provider: "google", callbackURL });
 
         if (error) {
             toast.error("Couldn't open Google", { description: error.message || "Please try again." });

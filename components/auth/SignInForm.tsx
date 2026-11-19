@@ -29,6 +29,17 @@ export default function SignInForm() {
     const showEmailError = (email !== "" || submitted) && emailError;
     const showPasswordError = submitted && passwordError;
 
+    // where to go after signing in: the page proxy.ts sent them from (?redirect=), or their dashboard
+    // read in the handlers, not with useSearchParams, so the page needs no Suspense boundary
+    // only paths on this site are accepted ("/..." but not "//other-site.com"), so the link can't send people elsewhere
+    const getNextPage = () => {
+        const redirect = new URLSearchParams(window.location.search).get("redirect");
+        if (redirect && redirect.startsWith("/") && !redirect.startsWith("//")) return redirect;
+
+        // proxy.ts sends /dashboard on to the user's own dashboard
+        return "/dashboard";
+    };
+
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setSubmitted(true);
@@ -39,13 +50,12 @@ export default function SignInForm() {
         setLoading(true);
         const success = await signInUser(email, password);
 
-        // TODO: redirect to the user's dashboard once the dashboards exist
         if (success) {
             // the page stays mounted (hidden) after we leave, so clear it for next time; the email stays for convenience
             setLoading(false);
             setSubmitted(false);
             setPassword("");
-            router.push("/");
+            router.push(getNextPage());
         }
         else setLoading(false);
     };
@@ -53,7 +63,7 @@ export default function SignInForm() {
     // Google sends the browser to its own page, the spinner stays until it leaves
     const handleGoogle = async () => {
         setGoogleLoading(true);
-        await googleSignIn();
+        await googleSignIn(getNextPage());
         setGoogleLoading(false);
     };
 
