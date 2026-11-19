@@ -36,3 +36,16 @@ export interface UserData {
     isBlocked?: boolean
     createdAt: string
 }
+
+// numbers for the admin overview (GET /stats/admin)
+export interface AdminStats {
+    totalUsers: number
+    customers: number
+    vendors: number
+    admins: number
+    totalMenuItems: number
+    pendingMenuItems: number
+    approvedMenuItems: number
+    rejectedMenuItems: number
+    totalTransactions: number
+}

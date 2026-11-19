@@ -1,7 +1,7 @@
 import { headers } from "next/headers";
 import { connection } from "next/server";
 import { auth } from "@/lib/auth";
-import { UserData, VendorPreview } from "@/lib/types";
+import { AdminStats, UserData, VendorPreview } from "@/lib/types";
 
 // server-only helpers: they read the request's cookies, so only server components can call them
 
@@ -32,5 +32,14 @@ export async function getUsers(search?: string, role?: string): Promise<UserData
         headers: { Authorization: `Bearer ${await getToken()}` },
     });
     if (!res.ok) throw new Error("Couldn't load users");
+    return await res.json();
+}
+
+// admin: counts for the overview's stat cards and charts
+export async function getAdminStats(): Promise<AdminStats> {
+    const res = await fetch(`${apiUrl}/stats/admin`, {
+        headers: { Authorization: `Bearer ${await getToken()}` },
+    });
+    if (!res.ok) throw new Error("Couldn't load the overview");
     return await res.json();
 }
