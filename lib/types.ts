@@ -49,3 +49,23 @@ export interface AdminStats {
     rejectedMenuItems: number
     totalTransactions: number
 }
+
+export type MenuItemStatus = "pending" | "approved" | "rejected" | "inactive"
+
+// a menu item as the admin list sends it, with the vendor attached by $lookup
+export interface MenuItemData {
+    _id: string
+    itemName: string
+    category: string
+    description: string
+    price: number
+    location: string
+    images: string[]
+    status: MenuItemStatus
+    createdAt: string
+    vendor: {
+        name: string
+        email: string
+        businessName?: string
+    }
+}

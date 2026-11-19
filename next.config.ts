@@ -5,6 +5,10 @@ const nextConfig: NextConfig = {
   cacheComponents: true,
   partialPrefetching: true,
   reactCompiler: true,
+  // menu item images are hosted on ImgBB; next/image only loads external hosts listed here
+  images: {
+    remotePatterns: [new URL("https://i.ibb.co/**")],
+  },
   turbopack: {
     rules: {
       "*.css": {
