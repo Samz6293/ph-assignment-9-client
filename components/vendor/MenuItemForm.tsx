@@ -10,16 +10,19 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import FieldMessage from "@/components/shared/FieldMessage";
 import ImageUpload from "@/components/shared/ImageUpload";
 import { categories } from "@/lib/menu";
-import { createMenuItem } from "@/lib/vendor";
+import { createMenuItem, updateMenuItem } from "@/lib/vendor";
+import { MyMenuItem } from "@/lib/types";
 
+// one form for Add and Edit: with an item it starts filled in and saves changes instead of creating
 // isAtLimit: a Free vendor with 3 active items; the banner above explains it and the button stays off
-export default function AddMenuItemForm({ isAtLimit }: { isAtLimit: boolean }) {
-    const [itemName, setItemName] = useState("");
-    const [category, setCategory] = useState("");
-    const [description, setDescription] = useState("");
-    const [price, setPrice] = useState("");
-    const [location, setLocation] = useState("");
-    const [images, setImages] = useState<string[]>([]);
+// onSaved: lets the Edit dialog close itself after a successful save
+export default function MenuItemForm({ item, isAtLimit = false, onSaved }: { item?: MyMenuItem, isAtLimit?: boolean, onSaved?: () => void }) {
+    const [itemName, setItemName] = useState(item?.itemName ?? "");
+    const [category, setCategory] = useState(item?.category ?? "");
+    const [description, setDescription] = useState(item?.description ?? "");
+    const [price, setPrice] = useState(item ? String(item.price) : "");
+    const [location, setLocation] = useState(item?.location ?? "");
+    const [images, setImages] = useState<string[]>(item?.images ?? []);
     const [submitted, setSubmitted] = useState(false);
     const [loading, setLoading] = useState(false);
     const router = useRouter();
@@ -46,18 +49,26 @@ export default function AddMenuItemForm({ isAtLimit }: { isAtLimit: boolean }) {
         if (itemNameError || categoryError || descriptionError || priceError || locationError || imagesError) return;
 
         setLoading(true);
-        const isDone = await createMenuItem({
+        const data = {
             itemName: itemName.trim(),
             category,
             description: description.trim(),
             price: Number(price),
             location: location.trim(),
             images,
-        });
+        };
+        const isDone = item ? await updateMenuItem(item._id, data) : await createMenuItem(data);
         setLoading(false);
         if (!isDone) return;
 
-        // empty form for the next item; refresh re-checks the Free plan banner
+        // edit: close the dialog and show the new pending status
+        if (item) {
+            onSaved?.();
+            router.refresh();
+            return;
+        }
+
+        // add: empty form for the next item; refresh re-checks the Free plan banner
         setSubmitted(false);
         setItemName("");
         setCategory("");
@@ -69,8 +80,9 @@ export default function AddMenuItemForm({ isAtLimit }: { isAtLimit: boolean }) {
     };
 
     return (
-        <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-6 bg-card border p-5 rounded-2xl
-            md:p-7">
+        // as a page it sits in a card; inside the Edit dialog the dialog is the card
+        <form onSubmit={handleSubmit} noValidate className={`flex flex-col gap-6
+            ${!item && "bg-card border p-5 rounded-2xl md:p-7"}`}>
             <FieldGroup className="gap-4">
                 <Field>
                     <FieldLabel htmlFor="itemName">Item Name</FieldLabel>
@@ -127,9 +139,11 @@ export default function AddMenuItemForm({ isAtLimit }: { isAtLimit: boolean }) {
                 </Field>
             </FieldGroup>
 
+            {item && <p className="text-sm text-muted-foreground">Saving sends this item back to an admin for review.</p>}
+
             <Button size="lg" type="submit" disabled={loading || isAtLimit} className="w-full
                 md:w-auto md:self-end">
-                {loading ? <><Spinner /> Sending…</> : "Send for review"}
+                {loading ? <><Spinner /> Sending…</> : item ? "Save and resubmit" : "Send for review"}
             </Button>
         </form>
     )

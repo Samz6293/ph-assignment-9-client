@@ -2,8 +2,8 @@
 import Image from "next/image";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import MenuItemStatusTag from "@/components/admin/MenuItemStatusTag";
-import MenuItemThumb from "@/components/admin/MenuItemThumb";
+import MenuItemStatusTag from "@/components/shared/MenuItemStatusTag";
+import MenuItemThumb from "@/components/shared/MenuItemThumb";
 import MenuItemReviewActions from "@/components/admin/MenuItemReviewActions";
 import { MenuItemData } from "@/lib/types";
 

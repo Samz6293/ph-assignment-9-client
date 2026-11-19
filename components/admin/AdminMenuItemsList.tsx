@@ -1,7 +1,7 @@
 import { ClipboardListIcon } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import MenuItemStatusTag from "@/components/admin/MenuItemStatusTag";
-import MenuItemThumb from "@/components/admin/MenuItemThumb";
+import MenuItemStatusTag from "@/components/shared/MenuItemStatusTag";
+import MenuItemThumb from "@/components/shared/MenuItemThumb";
 import MenuItemReviewDialog from "@/components/admin/MenuItemReviewDialog";
 import { getAdminMenuItems } from "@/lib/fetch";
 import { formatDate } from "@/lib/date";

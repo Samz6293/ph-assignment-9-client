@@ -1,39 +1,32 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Trash2Icon } from "lucide-react";
-import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
-import { deleteMenuItem } from "@/lib/admin";
-import { MenuItemData } from "@/lib/types";
 
-// Delete, behind a confirm because it can't be undone
-export default function DeleteMenuItemButton({ item }: { item: MenuItemData }) {
-    const [open, setOpen] = useState(false);
+// the "Delete X?" confirm; the parent decides what opens it (a button, a menu item)
+// onDelete: the admin or vendor action that does the deleting and shows the toast
+export default function DeleteMenuItemDialog({ open, onOpenChange, itemName, onDelete }: { open: boolean, onOpenChange: (open: boolean) => void, itemName: string, onDelete: () => Promise<boolean> }) {
     const [deleting, setDeleting] = useState(false);
     const router = useRouter();
 
     const handleDelete = async () => {
         setDeleting(true);
-        const isDone = await deleteMenuItem(item);
+        const isDone = await onDelete();
         setDeleting(false);
 
         if (!isDone) return;
-        setOpen(false);
-        // the item leaves the list, which also closes its Review dialog
+        onOpenChange(false);
+        // the item leaves the list (and any dialog it was opened from closes with it)
         router.refresh();
     };
 
     return (
-        <AlertDialog open={open} onOpenChange={setOpen}>
-            <AlertDialogTrigger render={<Button variant="outline" />}>
-                <Trash2Icon data-icon="inline-start" strokeWidth={2.5} />
-                Delete
-            </AlertDialogTrigger>
+        <AlertDialog open={open} onOpenChange={onOpenChange}>
             <AlertDialogContent>
                 <AlertDialogHeader>
-                    <AlertDialogTitle>Delete {item.itemName}?</AlertDialogTitle>
+                    <AlertDialogTitle>Delete {itemName}?</AlertDialogTitle>
                     <AlertDialogDescription>This removes it from PizzaHub for good. It can’t be undone.</AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>

@@ -1,17 +1,18 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { CheckIcon, XIcon } from "lucide-react";
+import { CheckIcon, Trash2Icon, XIcon } from "lucide-react";
 import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
-import DeleteMenuItemButton from "@/components/admin/DeleteMenuItemButton";
-import { setMenuItemStatus } from "@/lib/admin";
+import DeleteMenuItemDialog from "@/components/shared/DeleteMenuItemDialog";
+import { deleteMenuItem, setMenuItemStatus } from "@/lib/admin";
 import { MenuItemData } from "@/lib/types";
 
 // Delete on the left; Approve (right away) and Reject (asks first) on the right
 export default function MenuItemReviewActions({ item }: { item: MenuItemData }) {
     const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+    const [isDeleteOpen, setIsDeleteOpen] = useState(false);
     const [saving, setSaving] = useState<"approved" | "rejected" | null>(null);
     const router = useRouter();
 
@@ -29,7 +30,11 @@ export default function MenuItemReviewActions({ item }: { item: MenuItemData }) 
     return (
         <div className="flex flex-col-reverse gap-2 w-full
             sm:flex-row sm:items-center sm:justify-between">
-            <DeleteMenuItemButton item={item} />
+            <Button variant="outline" onClick={() => setIsDeleteOpen(true)}>
+                <Trash2Icon data-icon="inline-start" strokeWidth={2.5} />
+                Delete
+            </Button>
+            <DeleteMenuItemDialog open={isDeleteOpen} onOpenChange={setIsDeleteOpen} itemName={item.itemName} onDelete={() => deleteMenuItem(item)} />
 
             {/* the vendor turned it off; the server refuses approve/reject, so only a note */}
             {item.status === "inactive" ?

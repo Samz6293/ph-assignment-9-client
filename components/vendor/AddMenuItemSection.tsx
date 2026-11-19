@@ -1,7 +1,7 @@
 import { headers } from "next/headers";
 import { connection } from "next/server";
 import FreePlanBanner from "@/components/vendor/FreePlanBanner";
-import AddMenuItemForm from "@/components/vendor/AddMenuItemForm";
+import MenuItemForm from "@/components/vendor/MenuItemForm";
 import { auth } from "@/lib/auth";
 import { getMyMenuItems } from "@/lib/fetch";
 import { freePlanLimit } from "@/lib/menu";
@@ -21,7 +21,7 @@ export default async function AddMenuItemSection() {
     return (
         <div className="flex flex-col gap-4">
             {isAtLimit && <FreePlanBanner />}
-            <AddMenuItemForm isAtLimit={isAtLimit} />
+            <MenuItemForm isAtLimit={isAtLimit} />
         </div>
     )
 }
