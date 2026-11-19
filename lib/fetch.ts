@@ -86,3 +86,11 @@ export async function getMenuLocations(): Promise<string[]> {
     if (!res.ok) throw new Error("Couldn't load the areas");
     return await res.json();
 }
+
+// public: one item for Item Details; null when it doesn't exist or isn't live (the page shows "not found")
+export async function getMenuItem(id: string): Promise<PublicMenuItem | null> {
+    const res = await fetch(`${apiUrl}/menu-items/${id}`);
+    if (res.status === 404) return null;
+    if (!res.ok) throw new Error("Couldn't load this item");
+    return await res.json();
+}

@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import Link from "next/link";
 import Logo from "@/components/shared/Logo";
 import NavLinks from "@/components/navbar/NavLinks";
@@ -16,8 +17,11 @@ export default function Navbar() {
                 </Link>
 
                 {/* desktop: links sit right after the logo */}
-                <NavLinks className="hidden items-center gap-1.5
-                    lg:flex" links={navLinks} />
+                {/* Suspense: NavLinks reads the URL, which isn't known ahead of time on /menu/[id], so it streams in there */}
+                <Suspense>
+                    <NavLinks className="hidden items-center gap-1.5
+                        lg:flex" links={navLinks} />
+                </Suspense>
 
                 {/* right side: theme toggle always, then the user's avatar or the auth buttons, menu button below desktop */}
                 <div className="flex items-center gap-2.5 ml-auto">

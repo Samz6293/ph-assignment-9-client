@@ -55,6 +55,7 @@ export type MenuItemStatus = "pending" | "approved" | "rejected" | "inactive"
 // a menu item as the admin list sends it, with the vendor attached by $lookup
 export interface MenuItemData {
     _id: string
+    vendorId: string
     itemName: string
     category: string
     description: string
