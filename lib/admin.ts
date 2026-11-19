@@ -6,17 +6,20 @@ import { MenuItemData, UserData } from "@/lib/types";
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
+// the signed-in user's token, fetched in the browser from Better Auth's /token route (uses the session cookie)
+async function getToken() {
+    const { data } = await authClient.token();
+    return data?.token;
+}
+
 // blocks or unblocks a customer or vendor
 export async function setUserBlocked(user: UserData, isBlocked: boolean) {
     const action = isBlocked ? "block" : "unblock";
 
     try {
-        // in the browser the token comes from Better Auth's /token route, using the session cookie
-        const { data: tokenData } = await authClient.token();
-
         const res = await fetch(`${apiUrl}/admin/users/${user._id}/block`, {
             method: "PATCH",
-            headers: { "Content-Type": "application/json", Authorization: `Bearer ${tokenData?.token}` },
+            headers: { "Content-Type": "application/json", Authorization: `Bearer ${await getToken()}` },
             body: JSON.stringify({ isBlocked }),
         });
         const data = await res.json();
@@ -42,11 +45,9 @@ export async function setMenuItemStatus(item: MenuItemData, status: "approved" |
     const action = status === "approved" ? "approve" : "reject";
 
     try {
-        const { data: tokenData } = await authClient.token();
-
         const res = await fetch(`${apiUrl}/admin/menu-items/${item._id}/status`, {
             method: "PATCH",
-            headers: { "Content-Type": "application/json", Authorization: `Bearer ${tokenData?.token}` },
+            headers: { "Content-Type": "application/json", Authorization: `Bearer ${await getToken()}` },
             body: JSON.stringify({ status }),
         });
         const data = await res.json();
@@ -63,6 +64,29 @@ export async function setMenuItemStatus(item: MenuItemData, status: "approved" |
     }
     catch {
         toast.error(`Couldn't ${action} ${item.itemName}`, { description: "Check your connection and try again." });
+        return false;
+    }
+}
+
+// deletes a menu item for good (for items that break the rules)
+export async function deleteMenuItem(item: MenuItemData) {
+    try {
+        const res = await fetch(`${apiUrl}/admin/menu-items/${item._id}`, {
+            method: "DELETE",
+            headers: { Authorization: `Bearer ${await getToken()}` },
+        });
+        const data = await res.json();
+
+        if (!res.ok) {
+            toast.error(`Couldn't delete ${item.itemName}`, { description: data.message || "Please try again." });
+            return false;
+        }
+
+        toast.success(`${item.itemName} deleted`, { description: "It's gone from PizzaHub for good." });
+        return true;
+    }
+    catch {
+        toast.error(`Couldn't delete ${item.itemName}`, { description: "Check your connection and try again." });
         return false;
     }
 }
