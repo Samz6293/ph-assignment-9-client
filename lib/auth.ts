@@ -1,5 +1,6 @@
 import { betterAuth } from "better-auth";
 import { APIError } from "better-auth/api";
+import { jwt } from "better-auth/plugins";
 import { mongodbAdapter } from "@better-auth/mongo-adapter";
 import { MongoClient } from "mongodb";
 
@@ -39,6 +40,8 @@ export const auth = betterAuth({
             },
         },
     },
+    // gives the signed-in user a short-lived token (15 min) that the Express server can verify
+    plugins: [jwt()],
     databaseHooks: {
         user: {
             create: {
