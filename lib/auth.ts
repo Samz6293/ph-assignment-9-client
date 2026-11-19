@@ -32,6 +32,12 @@ export const auth = betterAuth({
                 defaultValue: false,
                 input: false,
             },
+            // free / premium; only the Stripe webhook changes it, so input: false
+            subscriptionPlan: {
+                type: ["free", "premium"],
+                defaultValue: "free",
+                input: false,
+            },
             // vendors only: no default, so customers never get this field
             businessName: {
                 type: "string",
@@ -48,6 +54,15 @@ export const auth = betterAuth({
                 before: async (user) => {
                     if (user.role === "admin") {
                         throw new APIError("BAD_REQUEST", { message: "Choose Customer or Vendor to sign up." });
+                    }
+                },
+            },
+            // role needs input: true so sign-up can set it, which also lets /update-user change it;
+            // without this, any user could make themselves an admin. Roles change only in the database.
+            update: {
+                before: async (data) => {
+                    if ("role" in data) {
+                        throw new APIError("BAD_REQUEST", { message: "Your role can't be changed." });
                     }
                 },
             },
