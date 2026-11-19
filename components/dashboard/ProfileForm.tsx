@@ -101,7 +101,7 @@ export default function ProfileForm({ user }: { user: ProfileUser }) {
                 {readOnly.map((item) =>
                     <div key={item.label} className="flex flex-col gap-0.5">
                         <dt className="text-muted-foreground">{item.label}</dt>
-                        <dd className="font-semibold capitalize break-words">{item.value}</dd>
+                        <dd className="font-semibold capitalize wrap-break-word">{item.value}</dd>
                     </div>
                 )}
             </dl>
