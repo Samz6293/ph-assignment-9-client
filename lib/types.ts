@@ -85,6 +85,14 @@ export interface MenuItemInput {
     images: string[]
 }
 
+// what the order form sends; customer and vendor are worked out on the server
+export interface OrderInput {
+    itemId: string
+    deliveryDate: string
+    deliveryAddress: string
+    message: string
+}
+
 // a live item on the public menu, with the vendor's public details
 export type PublicMenuItem = MyMenuItem & {
     vendor: {

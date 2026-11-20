@@ -5,6 +5,10 @@ const nextConfig: NextConfig = {
   cacheComponents: true,
   partialPrefetching: true,
   reactCompiler: true,
+  experimental: {
+    // runs the React Compiler as native Rust inside Turbopack instead of through Babel, so dev compiles are faster
+    turbopackRustReactCompiler: true,
+  },
   // menu item images are hosted on ImgBB; next/image only loads external hosts listed here
   images: {
     remotePatterns: [new URL("https://i.ibb.co/**")],
