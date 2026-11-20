@@ -140,6 +140,8 @@ export interface OrderData {
     message: string
     status: OrderStatus
     createdAt: string
+    // when it was accepted, rejected or cancelled; missing while pending (and on orders answered before this was saved)
+    statusUpdatedAt?: string
     // missing when the vendor deleted the item after the order
     item?: {
         _id: string

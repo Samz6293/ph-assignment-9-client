@@ -46,7 +46,7 @@ export default async function MyOrdersList() {
                             </div>
                         </div>
                         <div className="flex items-center justify-end border-t pt-3">
-                            <OrderDetailsDialog order={order} delivery={formatDate(order.deliveryDate)} ordered={formatDate(order.createdAt)} />
+                            <OrderDetailsDialog order={order} delivery={formatDate(order.deliveryDate)} ordered={formatDate(order.createdAt)} answered={order.statusUpdatedAt ? formatDate(order.statusUpdatedAt) : ""} />
                         </div>
                     </div>
                 )}
@@ -83,7 +83,7 @@ export default async function MyOrdersList() {
                                 </TableCell>
                                 <TableCell className="pr-5">
                                     <div className="flex justify-end">
-                                        <OrderDetailsDialog order={order} delivery={formatDate(order.deliveryDate)} ordered={formatDate(order.createdAt)} />
+                                        <OrderDetailsDialog order={order} delivery={formatDate(order.deliveryDate)} ordered={formatDate(order.createdAt)} answered={order.statusUpdatedAt ? formatDate(order.statusUpdatedAt) : ""} />
                                     </div>
                                 </TableCell>
                             </TableRow>

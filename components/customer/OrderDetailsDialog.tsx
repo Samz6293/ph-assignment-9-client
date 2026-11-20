@@ -5,17 +5,11 @@ import { Button } from "@/components/ui/button";
 import MenuItemThumb from "@/components/shared/MenuItemThumb";
 import OrderStatusTag from "@/components/shared/OrderStatusTag";
 import CancelOrderButton from "@/components/customer/CancelOrderButton";
+import OrderTimeline from "@/components/customer/OrderTimeline";
 import { MyOrder } from "@/lib/types";
 
-// what each status means for the customer, in the shop's name
-const statusNote = (order: MyOrder, shopName: string) =>
-    order.status === "pending" ? `Waiting for ${shopName} to confirm.`
-    : order.status === "accepted" ? `${shopName} confirmed your order.`
-    : order.status === "rejected" ? `${shopName} couldn't take this order.`
-    : "You cancelled this order.";
-
 // dates come in already formatted from the server list
-export default function OrderDetailsDialog({ order, delivery, ordered }: { order: MyOrder, delivery: string, ordered: string }) {
+export default function OrderDetailsDialog({ order, delivery, ordered, answered }: { order: MyOrder, delivery: string, ordered: string, answered: string }) {
     const shopName = order.vendor?.businessName ?? order.vendor?.name ?? "The shop";
     const details = [
         { label: "Shop", value: shopName },
@@ -47,7 +41,8 @@ export default function OrderDetailsDialog({ order, delivery, ordered }: { order
                     </div>
                 </DialogHeader>
 
-                <p className="text-sm text-muted-foreground">{statusNote(order, shopName)}</p>
+                {/* where the order is: placed → the shop's answer → delivery day */}
+                <OrderTimeline order={order} shopName={shopName} ordered={ordered} answered={answered} delivery={delivery} />
 
                 {/* details: label, value on the line below; the message only when there is one */}
                 <dl className="flex flex-col gap-3 bg-card border text-sm p-4 rounded-2xl">
