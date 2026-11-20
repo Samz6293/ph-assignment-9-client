@@ -12,6 +12,7 @@ import PasswordField, { getPasswordRules } from "@/components/auth/PasswordField
 import RolePicker from "@/components/auth/RolePicker";
 import FieldMessage from "@/components/shared/FieldMessage";
 import { googleSignIn, signUpUser } from "@/lib/user";
+import { getDashboardLink } from "@/lib/navlinks";
 
 export default function SignUpForm() {
     const [name, setName] = useState("");
@@ -50,8 +51,9 @@ export default function SignUpForm() {
         const formData = { name, email, password, image, role, businessName: role === "vendor" ? businessName.trim() : undefined };
         const success = await signUpUser(formData);
 
-        // TODO: redirect to the user's dashboard once the dashboards exist
         if (success) {
+            // read before the reset below sets role back to "customer"
+            const dashboardLink = getDashboardLink(role);
             // the page stays mounted (hidden) after we leave, so start it fresh for next time
             setLoading(false);
             setSubmitted(false);
@@ -61,7 +63,7 @@ export default function SignUpForm() {
             setImage(null);
             setRole("customer");
             setBusinessName("");
-            router.push("/");
+            router.push(dashboardLink);
         }
         else setLoading(false);
     };

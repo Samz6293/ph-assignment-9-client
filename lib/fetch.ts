@@ -24,10 +24,12 @@ export async function getMe(): Promise<UserData> {
     return await res.json();
 }
 
-// newest pizzeria on PizzaHub, shown on the hero chip
-export async function getLatestVendor(): Promise<VendorPreview> {
-    // TODO: fetch the newest vendor from the server once that route exists
-    return { businessName: "Napoli Corner", location: "Zindabazar, Sylhet" };
+// public: the newest pizzeria with a live item, for the hero chip; null when there isn't one yet
+export async function getLatestVendor(): Promise<VendorPreview | null> {
+    const res = await fetch(`${apiUrl}/vendors/latest`);
+    if (res.status === 404) return null;
+    if (!res.ok) throw new Error("Couldn't load the newest pizzeria");
+    return await res.json();
 }
 
 // admin: every user, filtered on the server by search (name or email) and role

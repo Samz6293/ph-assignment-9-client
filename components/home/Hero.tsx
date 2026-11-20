@@ -1,12 +1,11 @@
+import { Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRightIcon, CrownIcon, MapPinIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { getLatestVendor } from "@/lib/fetch";
+import NewestVendorChip from "@/components/home/NewestVendorChip";
 
-export default async function Hero() {
-    const vendor = await getLatestVendor();
-
+export default function Hero() {
     return (
         <section className="content-box flex flex-col gap-10 pt-7 pb-16 justify-between
             md:gap-12 md:pt-10 md:pb-20 xl:flex-row xl:items-center xl:gap-7 xl:pt-12 xl:pb-26">
@@ -42,13 +41,10 @@ export default async function Hero() {
                     <Image src="/pizza-hero.png" alt="Margherita pizza seen from above, image from pngtree.com" fill preload sizes="(min-width: 1280px) 450px, (min-width: 768px) 345px, 260px" className="object-cover rounded-full" />
                 </div>
 
-                {/* newest pizzeria */}
-                <div className="absolute bottom-1/12 left-0 flex items-center gap-2.5 bg-card shadow-float px-4.5 py-2.75 rounded-full text-sm whitespace-nowrap
-                    md:-left-1/8 xl:-left-1/16">
-                    <span className="size-2.5 bg-success rounded-full" />
-                    <b>{vendor.businessName}</b>
-                    <span className="text-muted-foreground">{vendor.location}</span>
-                </div>
+                {/* newest pizzeria: fetched, so it streams in after the rest of the hero (no placeholder needed) */}
+                <Suspense>
+                    <NewestVendorChip />
+                </Suspense>
 
                 {/* premium chip */}
                 <div className="absolute top-1/16 right-0 flex items-center gap-1.5 bg-premium text-highlight px-3.75 py-2.25 rounded-full text-sm font-bold">
