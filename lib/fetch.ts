@@ -1,7 +1,7 @@
 import { headers } from "next/headers";
 import { connection } from "next/server";
 import { auth } from "@/lib/auth";
-import { AdminStats, MenuFilters, MenuItemData, MyMenuItem, MyOrder, PublicMenuItem, UserData, VendorPreview } from "@/lib/types";
+import { AdminStats, MenuFilters, MenuItemData, MyMenuItem, MyOrder, PublicMenuItem, UserData, VendorOrder, VendorPreview } from "@/lib/types";
 
 // server-only helpers: they read the request's cookies, so only server components can call them
 
@@ -69,6 +69,15 @@ export async function getMyMenuItems(): Promise<MyMenuItem[]> {
 // customer: their own orders, newest first, with the item and shop attached
 export async function getMyOrders(): Promise<MyOrder[]> {
     const res = await fetch(`${apiUrl}/orders/mine`, {
+        headers: { Authorization: `Bearer ${await getToken()}` },
+    });
+    if (!res.ok) throw new Error("Couldn't load your orders");
+    return await res.json();
+}
+
+// vendor: orders for their own items, newest first, with the item and customer attached
+export async function getVendorOrders(): Promise<VendorOrder[]> {
+    const res = await fetch(`${apiUrl}/orders/vendor`, {
         headers: { Authorization: `Bearer ${await getToken()}` },
     });
     if (!res.ok) throw new Error("Couldn't load your orders");

@@ -87,15 +87,15 @@ export interface MenuItemInput {
 
 export type OrderStatus = "pending" | "accepted" | "rejected" | "cancelled"
 
-// a customer's order (GET /orders/mine), with the item and the shop attached
-export interface MyOrder {
+// fields every order has, whoever is looking at it
+export interface OrderData {
     _id: string
     deliveryDate: string
     deliveryAddress: string
     message: string
     status: OrderStatus
     createdAt: string
-    // missing when the vendor deleted the item (or their account) after the order
+    // missing when the vendor deleted the item after the order
     item?: {
         _id: string
         itemName: string
@@ -103,9 +103,23 @@ export interface MyOrder {
         price: number
         category: string
     }
+}
+
+// extends: everything OrderData has, plus these fields
+// a customer's order (GET /orders/mine), with the shop attached
+export interface MyOrder extends OrderData {
     vendor?: {
         name: string
         businessName?: string
+    }
+}
+
+// an order for a vendor's item (GET /orders/vendor), with the customer attached
+export interface VendorOrder extends OrderData {
+    customer?: {
+        name: string
+        email: string
+        image?: string
     }
 }
 
