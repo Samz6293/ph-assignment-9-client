@@ -85,6 +85,30 @@ export interface MenuItemInput {
     images: string[]
 }
 
+export type OrderStatus = "pending" | "accepted" | "rejected" | "cancelled"
+
+// a customer's order (GET /orders/mine), with the item and the shop attached
+export interface MyOrder {
+    _id: string
+    deliveryDate: string
+    deliveryAddress: string
+    message: string
+    status: OrderStatus
+    createdAt: string
+    // missing when the vendor deleted the item (or their account) after the order
+    item?: {
+        _id: string
+        itemName: string
+        images: string[]
+        price: number
+        category: string
+    }
+    vendor?: {
+        name: string
+        businessName?: string
+    }
+}
+
 // what the order form sends; customer and vendor are worked out on the server
 export interface OrderInput {
     itemId: string
