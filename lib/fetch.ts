@@ -15,6 +15,15 @@ async function getToken() {
     return token;
 }
 
+// the signed-in user, straight from the database (the session can be a little behind, e.g. right after a payment)
+export async function getMe(): Promise<UserData> {
+    const res = await fetch(`${apiUrl}/users/me`, {
+        headers: { Authorization: `Bearer ${await getToken()}` },
+    });
+    if (!res.ok) throw new Error("Couldn't load your account");
+    return await res.json();
+}
+
 // newest pizzeria on PizzaHub, shown on the hero chip
 export async function getLatestVendor(): Promise<VendorPreview> {
     // TODO: fetch the newest vendor from the server once that route exists

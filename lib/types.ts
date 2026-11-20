@@ -34,6 +34,9 @@ export interface UserData {
     role: "customer" | "vendor" | "admin"
     businessName?: string
     isBlocked?: boolean
+    // vendors: changed only by the Stripe webhook
+    subscriptionPlan?: "free" | "premium"
+    subscriptionExpiresAt?: string | null
     createdAt: string
 }
 

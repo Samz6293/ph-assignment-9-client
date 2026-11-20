@@ -131,3 +131,28 @@ export async function answerOrder(order: VendorOrder, status: "accepted" | "reje
         return false;
     }
 }
+
+// asks the server for a Stripe Checkout page and goes there; Premium switches on later, from the webhook
+// returns false (with a toast) only when it couldn't open the page
+export async function startCheckout() {
+    try {
+        const res = await fetch(`${apiUrl}/create-checkout-session`, {
+            method: "POST",
+            headers: { Authorization: `Bearer ${await getClientToken()}` },
+        });
+        const data = await res.json();
+
+        if (!res.ok) {
+            toast.error("Couldn't open checkout", { description: data.message || "Please try again." });
+            return false;
+        }
+
+        // leave PizzaHub for Stripe's payment page
+        window.location.href = data.url;
+        return true;
+    }
+    catch {
+        toast.error("Couldn't open checkout", { description: "Check your connection and try again." });
+        return false;
+    }
+}
