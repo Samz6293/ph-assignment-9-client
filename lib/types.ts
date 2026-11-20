@@ -40,6 +40,24 @@ export interface UserData {
     createdAt: string
 }
 
+// a Premium payment saved by the Stripe webhook (GET /admin/transactions), with the vendor attached
+export interface Transaction {
+    _id: string
+    plan: "premium"
+    amount: number
+    currency: string
+    stripeSessionId: string
+    stripeSubscriptionId: string
+    status: string
+    createdAt: string
+    // missing if the vendor's account was deleted later
+    vendor?: {
+        name: string
+        email: string
+        businessName?: string
+    }
+}
+
 // numbers for the admin overview (GET /stats/admin)
 export interface AdminStats {
     totalUsers: number

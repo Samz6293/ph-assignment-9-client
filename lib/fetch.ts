@@ -1,7 +1,7 @@
 import { headers } from "next/headers";
 import { connection } from "next/server";
 import { auth } from "@/lib/auth";
-import { AdminStats, CustomerStats, MenuFilters, MenuItemData, MyMenuItem, MyOrder, PublicMenuItem, UserData, VendorOrder, VendorPreview, VendorStats } from "@/lib/types";
+import { AdminStats, CustomerStats, MenuFilters, MenuItemData, MyMenuItem, MyOrder, PublicMenuItem, Transaction, UserData, VendorOrder, VendorPreview, VendorStats } from "@/lib/types";
 
 // server-only helpers: they read the request's cookies, so only server components can call them
 
@@ -68,6 +68,15 @@ export async function getCustomerStats(): Promise<CustomerStats> {
         headers: { Authorization: `Bearer ${await getToken()}` },
     });
     if (!res.ok) throw new Error("Couldn't load the overview");
+    return await res.json();
+}
+
+// admin: every Premium payment, newest first, with the vendor attached
+export async function getTransactions(): Promise<Transaction[]> {
+    const res = await fetch(`${apiUrl}/admin/transactions`, {
+        headers: { Authorization: `Bearer ${await getToken()}` },
+    });
+    if (!res.ok) throw new Error("Couldn't load the transactions");
     return await res.json();
 }
 
