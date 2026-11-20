@@ -1,5 +1,7 @@
 import { CheckIcon, CrownIcon, StoreIcon } from "lucide-react";
 import UpgradeButton from "@/components/vendor/UpgradeButton";
+import CancelSubscriptionButton from "@/components/vendor/CancelSubscriptionButton";
+import ResumeSubscriptionButton from "@/components/vendor/ResumeSubscriptionButton";
 import { getMe } from "@/lib/fetch";
 import { formatDate } from "@/lib/date";
 
@@ -24,6 +26,7 @@ const plans = [
 export default async function PlanCards() {
     const user = await getMe();
     const currentPlan = user.subscriptionPlan === "premium" ? "premium" : "free";
+    const endsOn = user.subscriptionExpiresAt ? formatDate(user.subscriptionExpiresAt) : "the end of this month";
 
     return (
         <div className="grid grid-cols-1 gap-4
@@ -62,10 +65,14 @@ export default async function PlanCards() {
                     {/* bottom line: the upgrade button, or how long Premium lasts */}
                     <div className="mt-auto pt-2">
                         {plan.id === "premium" && currentPlan === "free" && <UpgradeButton />}
+                        {/* Premium: renews → offer Cancel; cancelled → say when it ends and offer Keep Premium */}
                         {plan.id === "premium" && currentPlan === "premium" &&
-                            <p className="text-sm text-muted-foreground font-semibold">
-                                {user.subscriptionExpiresAt ? `Premium until ${formatDate(user.subscriptionExpiresAt)}. It renews every month.` : "Premium is active."}
-                            </p>
+                            <div className="flex flex-col gap-3">
+                                <p className="text-sm text-muted-foreground font-semibold">
+                                    {user.cancelAtPeriodEnd ? `Premium ends on ${endsOn} and won’t renew.` : `Renews on ${endsOn}.`}
+                                </p>
+                                {user.cancelAtPeriodEnd ? <ResumeSubscriptionButton /> : <CancelSubscriptionButton endsOn={endsOn} />}
+                            </div>
                         }
                         {plan.id === "free" && currentPlan === "free" &&
                             <p className="text-sm text-muted-foreground font-semibold">You can have 3 active items at a time.</p>

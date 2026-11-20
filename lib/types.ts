@@ -37,6 +37,8 @@ export interface UserData {
     // vendors: changed only by the Stripe webhook
     subscriptionPlan?: "free" | "premium"
     subscriptionExpiresAt?: string | null
+    // true after the vendor cancels: Premium lasts until subscriptionExpiresAt, then doesn't renew
+    cancelAtPeriodEnd?: boolean
     createdAt: string
 }
 

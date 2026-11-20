@@ -156,3 +156,49 @@ export async function startCheckout() {
         return false;
     }
 }
+
+// stops Premium renewing; it stays on until the end of the paid month
+export async function cancelSubscription(endsOn: string) {
+    try {
+        const res = await fetch(`${apiUrl}/subscriptions/cancel`, {
+            method: "POST",
+            headers: { Authorization: `Bearer ${await getClientToken()}` },
+        });
+        const data = await res.json();
+
+        if (!res.ok) {
+            toast.error("Couldn't cancel Premium", { description: data.message || "Please try again." });
+            return false;
+        }
+
+        toast.success("Premium won't renew", { description: `You keep Premium until ${endsOn}.` });
+        return true;
+    }
+    catch {
+        toast.error("Couldn't cancel Premium", { description: "Check your connection and try again." });
+        return false;
+    }
+}
+
+// undoes a cancel before the paid month ends, so Premium renews again
+export async function resumeSubscription() {
+    try {
+        const res = await fetch(`${apiUrl}/subscriptions/resume`, {
+            method: "POST",
+            headers: { Authorization: `Bearer ${await getClientToken()}` },
+        });
+        const data = await res.json();
+
+        if (!res.ok) {
+            toast.error("Couldn't keep Premium", { description: data.message || "Please try again." });
+            return false;
+        }
+
+        toast.success("Premium will renew", { description: "Nothing changes. It renews every month as before." });
+        return true;
+    }
+    catch {
+        toast.error("Couldn't keep Premium", { description: "Check your connection and try again." });
+        return false;
+    }
+}
