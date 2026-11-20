@@ -50,6 +50,30 @@ export interface AdminStats {
     totalTransactions: number
 }
 
+// vendor overview (GET /stats/vendor)
+export interface VendorStats {
+    totalMenuItems: number
+    activeMenuItems: number
+    pendingMenuItems: number
+    approvedMenuItems: number
+    rejectedMenuItems: number
+    inactiveMenuItems: number
+    pendingOrders: number
+    acceptedOrders: number
+    rejectedOrders: number
+    cancelledOrders: number
+    subscriptionPlan: "free" | "premium"
+}
+
+// customer overview (GET /stats/customer)
+export interface CustomerStats {
+    totalOrders: number
+    pendingOrders: number
+    acceptedOrders: number
+    rejectedOrders: number
+    cancelledOrders: number
+}
+
 export type MenuItemStatus = "pending" | "approved" | "rejected" | "inactive"
 
 // a menu item as the admin list sends it, with the vendor attached by $lookup

@@ -1,7 +1,7 @@
 import type { LucideIcon } from "lucide-react";
 
-// one number on a dashboard overview: label top-left, icon top-right, big value below
-export default function StatCard({ label, value, icon: Icon }: { label: string, value: number, icon: LucideIcon }) {
+// one number (or short word, like a plan) on a dashboard overview: label top-left, icon top-right, big value below
+export default function StatCard({ label, value, icon: Icon }: { label: string, value: number | string, icon: LucideIcon }) {
     return (
         <div className="flex flex-col gap-3 bg-card border p-4.5 rounded-2xl">
             {/* phones: icon on its own line above the label (flex-col-reverse puts the 2nd child first); wider: label left, icon right */}

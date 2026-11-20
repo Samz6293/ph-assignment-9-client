@@ -1,7 +1,7 @@
 import { headers } from "next/headers";
 import { connection } from "next/server";
 import { auth } from "@/lib/auth";
-import { AdminStats, MenuFilters, MenuItemData, MyMenuItem, MyOrder, PublicMenuItem, UserData, VendorOrder, VendorPreview } from "@/lib/types";
+import { AdminStats, CustomerStats, MenuFilters, MenuItemData, MyMenuItem, MyOrder, PublicMenuItem, UserData, VendorOrder, VendorPreview, VendorStats } from "@/lib/types";
 
 // server-only helpers: they read the request's cookies, so only server components can call them
 
@@ -38,6 +38,24 @@ export async function getUsers(search?: string, role?: string): Promise<UserData
 // admin: counts for the overview's stat cards and charts
 export async function getAdminStats(): Promise<AdminStats> {
     const res = await fetch(`${apiUrl}/stats/admin`, {
+        headers: { Authorization: `Bearer ${await getToken()}` },
+    });
+    if (!res.ok) throw new Error("Couldn't load the overview");
+    return await res.json();
+}
+
+// vendor: counts for their overview's stat cards and charts
+export async function getVendorStats(): Promise<VendorStats> {
+    const res = await fetch(`${apiUrl}/stats/vendor`, {
+        headers: { Authorization: `Bearer ${await getToken()}` },
+    });
+    if (!res.ok) throw new Error("Couldn't load the overview");
+    return await res.json();
+}
+
+// customer: counts for their overview's stat cards and chart
+export async function getCustomerStats(): Promise<CustomerStats> {
+    const res = await fetch(`${apiUrl}/stats/customer`, {
         headers: { Authorization: `Bearer ${await getToken()}` },
     });
     if (!res.ok) throw new Error("Couldn't load the overview");

@@ -14,7 +14,7 @@ const tiles = [
 
 export default function PizzaCategories() {
     return (
-        <section className="content-box flex flex-col gap-10 pb-16
+        <section id="categories" className="content-box flex flex-col gap-10 pb-16
             md:pb-20 lg:pb-26">
             <SectionHeader overline="Pizza categories" title="What are you in the mood for?" />
 
