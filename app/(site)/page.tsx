@@ -1,5 +1,6 @@
 import Hero from "@/components/home/Hero";
 import FeaturedMenu from "@/components/home/FeaturedMenu";
+import PizzaCategories from "@/components/home/PizzaCategories";
 import WhyChooseUs from "@/components/home/WhyChooseUs";
 import HowItWorks from "@/components/home/HowItWorks";
 
@@ -8,7 +9,7 @@ export default function Home() {
         <>
             <Hero />
             <FeaturedMenu />
-            {/* TODO: Pizza Categories goes here */}
+            <PizzaCategories />
             <WhyChooseUs />
             <HowItWorks />
         </>
